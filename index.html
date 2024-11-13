@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>成績輸入</title>
+</head>
+<body>
+  <h2>輸入成績</h2>
+  <form id="scoreForm">
+    <label for="name">姓名:</label>
+    <input type="text" id="name" required><br><br>
+    <label for="score">成績:</label>
+    <input type="number" id="score" required><br><br>
+    <button type="submit">送出</button>
+  </form>
+
+  <script type="module">
+    // Import Firebase functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // Firebase 配置
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAjYuSV0vu8wwh6BvpxsVj14CLst8nIDU",
+      authDomain: "web1113-5bdb8.firebaseapp.com",
+      databaseURL: "https://web1113-5bdb8-default-rtdb.asia-southeast1.firebasedatabase.app/",  // 加入 Database URL
+      projectId: "web1113-5bdb8",
+      storageBucket: "web1113-5bdb8.appspot.com",
+      messagingSenderId: "336450181091",
+      appId: "1:336450181091:web:a60795f879c78445dfb2d6"
+    };
+
+    // 初始化 Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // 表單提交處理
+    const form = document.getElementById('scoreForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const score = document.getElementById('score').value;
+
+      // 儲存資料到 Realtime Database
+      push(ref(database, 'scores/'), {
+        name: name,
+        score: parseInt(score)
+      }).then(() => {
+        alert("成績已儲存！");
+        form.reset();
+      }).catch((error) => {
+        console.error("儲存失敗:", error);
+      });
+    });
+  </script>
+</body>
+</html>
